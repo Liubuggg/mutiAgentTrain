@@ -1,0 +1,131 @@
+# 环境配置
+env:
+  name: "MultiAgentPathfinding"
+  num_agents: 4
+  map_size: [40, 40]
+  max_steps: 200
+  reward_config:
+    goal_reward: 10.0
+    collision_penalty: -5.0
+    step_penalty: -0.1
+    battery_penalty: -1.0
+    charging_reward: 0.5
+
+# 训练配置
+train:
+  batch_size: 64
+  train_steps: 10000
+  learning_rate: 0.0003
+  gamma: 0.99
+  clip_epsilon: 0.2
+  value_coeff: 0.5
+  entropy_coeff: 0.01
+  max_grad_norm: 0.5
+  num_epochs: 4
+  buffer_size: 10000
+  min_buffer_size: 1000
+  save_interval: 1000
+  evaluation_interval: 500
+
+# 模型配置
+model:
+  hidden_size: 128
+  num_layers: 2
+  dropout: 0.1
+  num_heads: 4
+  communication_range: 10.0
+
+# 日志配置
+logging:
+  log_interval: 100
+  save_interval: 1000
+  log_dir: "logs"
+  verbose: true
+  print_interval: 10
+
+# DHC模型配置
+dhc:
+  # 观察空间
+  observation_radius: 4
+  observation_shape: !!python/tuple [6, 9, 9]
+  
+  # 模型参数
+  hidden_dim: 128
+  embedding_dim: 64
+  num_heads: 4
+  dropout: 0.1
+  cnn_channels: 128
+  cnn_kernel_size: 3
+  cnn_stride: 1
+  cnn_padding: 1
+  max_comm_agents: 4
+  
+  # 任务和智能体
+  max_num_agents: 8
+  max_num_tasks: 16
+  max_episode_length: 200
+  
+  # 任务优先级分布
+  priority_distribution:
+    high: 0.2
+    medium: 0.5
+    low: 0.3
+    
+  # 电池相关
+  battery_consumption_rate: 0.1
+  charging_rate: 0.5
+  min_battery_level: 20.0
+  
+  # 通信相关
+  communication_range: 10.0
+  message_buffer_size: 10
+  communication:
+    num_comm_heads: 4
+    comm_hidden_dim: 64
+    comm_dropout: 0.1
+    max_comm_agents: 4
+    num_comm_layers: 2
+  
+  # 训练相关
+  batch_size: 64
+  learning_rate: 0.0003
+  target_update_interval: 100
+  
+  # 经验回放
+  buffer:
+    capacity: 10000
+    batch_size: 64
+    alpha: 0.6
+    beta: 0.4
+    
+  # 任务分配
+  task_allocator:
+    algorithm: "hungarian"  # "hungarian" 或 "decentralized"
+    compatibility_weights:
+      battery: 0.3
+      distance: 0.3
+      experience: 0.2
+      idle_time: 0.1
+      priority: 0.1
+
+# 环境设置
+environment:
+  map_length: 40
+  num_agents: 4
+  num_tasks: 8
+  num_charging_stations: 2
+  observation_radius: 4
+  
+  # 奖励函数
+  reward_fn: 
+    move: -0.1
+    stay_on_goal: 0.0
+    stay_off_goal: -0.1
+    collision: -0.5
+    complete_task: 5.0
+    low_battery: -0.2
+    charging: 0.1
+    
+  # 初始环境设置
+  init_env_settings: !!python/tuple [4, 40]
+  action_dim: 5
